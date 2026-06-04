@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>คุ้มเวอร์ — คำนวณช้อปปิ้ง</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.10.0/dist/tabler-icons.min.css"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f4f8;min-height:100vh;color:#1a1a2e}
+.app{max-width:430px;margin:0 auto;background:#fff;min-height:100vh;position:relative}
+/* LOGIN */
+.login-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:32px 24px;background:linear-gradient(160deg,#f0effe 0%,#fbeaf0 50%,#e1f5ee 100%)}
+.login-blob{width:88px;height:88px;border-radius:50%;background:#fff;border:3px solid #7F77DD;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:38px}
+.login-title{font-size:28px;font-weight:700;color:#3C3489;text-align:center;margin-bottom:6px;letter-spacing:-0.5px}
+.login-sub{font-size:14px;color:#534AB7;text-align:center;margin-bottom:28px;line-height:1.5}
+.login-card{background:#fff;border-radius:24px;border:1.5px solid #CECBF6;padding:28px 24px;width:100%;max-width:360px}
+.login-lbl{font-size:12px;font-weight:600;color:#534AB7;text-align:center;margin-bottom:10px;letter-spacing:0.5px;text-transform:uppercase}
+.login-input{width:100%;padding:14px 18px;border:2px solid #CECBF6;border-radius:14px;font-size:17px;background:#f8f7ff;color:#1a1a2e;text-align:center;margin-bottom:14px;outline:none;transition:border-color 0.2s}
+.login-input:focus{border-color:#7F77DD;background:#fff}
+.login-btn{width:100%;padding:14px;background:#7F77DD;color:#fff;border:none;border-radius:14px;font-size:16px;font-weight:600;cursor:pointer;letter-spacing:0.3px;transition:background 0.15s}
+.login-btn:active{background:#534AB7}
+/* TOPBAR */
+.topbar{display:flex;align-items:center;gap:12px;padding:14px 16px 12px;background:#fff;border-bottom:1.5px solid #f0effe;position:sticky;top:0;z-index:10}
+.av{width:40px;height:40px;border-radius:50%;background:#EEEDFE;border:2px solid #7F77DD;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#3C3489;flex-shrink:0}
+.topbar-name{font-size:15px;font-weight:600;color:#1a1a2e;flex:1}
+.topbar-sub{font-size:11px;color:#888;margin-top:1px}
+.logout-btn{background:none;border:1.5px solid #e8e6f0;border-radius:10px;cursor:pointer;color:#888;font-size:14px;padding:6px 10px;display:flex;align-items:center;gap:4px}
+/* NAV */
+.nav{display:flex;background:#fff;border-bottom:2px solid #f0effe}
+.nav-btn{flex:1;padding:10px 4px 9px;border:none;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;font-weight:600;color:#aaa;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all 0.15s;letter-spacing:0.3px}
+.nav-btn i{font-size:22px}
+.nav-btn.a0{color:#7F77DD;border-bottom-color:#7F77DD}
+.nav-btn.a1{color:#D4537E;border-bottom-color:#D4537E}
+.nav-btn.a2{color:#1D9E75;border-bottom-color:#1D9E75}
+/* PANES */
+.pane{display:none;padding:14px}
+.pane.show{display:block}
+/* HERO */
+.hero{border-radius:20px;padding:18px 18px 16px;margin-bottom:14px}
+.hero0{background:#EEEDFE;border:1.5px solid #AFA9EC}
+.hero1{background:#FBEAF0;border:1.5px solid #ED93B1}
+.hero2{background:#E1F5EE;border:1.5px solid #5DCAA5}
+.hero-title{font-size:17px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.hero0 .hero-title{color:#3C3489}
+.hero1 .hero-title{color:#72243E}
+.hero2 .hero-title{color:#085041}
+.hero-sub{font-size:12px;line-height:1.5}
+.hero0 .hero-sub{color:#534AB7}
+.hero1 .hero-sub{color:#993556}
+.hero2 .hero-sub{color:#0F6E56}
+/* CARDS */
+.field-group{background:#fff;border-radius:16px;border:1.5px solid #ede9f8;padding:16px;margin-bottom:12px}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.frow3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px}
+.flabel{font-size:11px;font-weight:600;color:#777;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.4px}
+.fin{width:100%;padding:10px 12px;border:1.5px solid #e5e0f5;border-radius:12px;font-size:15px;background:#faf9ff;color:#1a1a2e;outline:none;transition:border-color 0.2s}
+.fin:focus{border-color:#7F77DD;background:#fff}
+.fsel{width:100%;padding:10px 6px;border:1.5px solid #e5e0f5;border-radius:12px;font-size:13px;background:#faf9ff;color:#1a1a2e;outline:none}
+.sep{text-align:center;font-size:11px;color:#bbb;padding:6px 0 8px;font-weight:600;letter-spacing:0.5px}
+/* ITEM HEADER */
+.item-hdr{display:flex;align-items:center;margin-bottom:10px}
+.item-num{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;margin-right:8px;flex-shrink:0}
+.n0{background:#EEEDFE;color:#3C3489}
+.n1{background:#FBEAF0;color:#72243E}
+.n2{background:#E1F5EE;color:#085041}
+.n3{background:#FAEEDA;color:#633806}
+.item-lbl{font-size:13px;font-weight:600;color:#444}
+.rm-btn{margin-left:auto;background:none;border:1.5px solid #eee;border-radius:8px;cursor:pointer;color:#bbb;padding:4px 8px;font-size:14px}
+.add-btn{width:100%;padding:10px;border:2px dashed #d4ceee;border-radius:12px;background:#faf9ff;color:#888;font-size:13px;font-weight:500;cursor:pointer;margin-top:4px;transition:border-color 0.2s}
+.add-btn:hover{border-color:#7F77DD;color:#7F77DD}
+/* BUTTONS */
+.go-btn{width:100%;padding:15px;border:none;border-radius:16px;font-size:16px;font-weight:700;cursor:pointer;margin-top:4px;color:#fff;letter-spacing:0.3px;transition:opacity 0.15s}
+.go-btn:active{opacity:0.85}
+.go0{background:#7F77DD}
+.go1{background:#D4537E}
+.go2{background:#1D9E75}
+/* RESULTS */
+.result{border-radius:16px;padding:16px;margin-top:12px;display:none}
+.result.show{display:block}
+.res0{background:#EEEDFE;border:1.5px solid #AFA9EC}
+.res1{background:#FBEAF0;border:1.5px solid #ED93B1}
+.res2{background:#E1F5EE;border:1.5px solid #5DCAA5}
+.res-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.res-card{border-radius:14px;padding:14px;text-align:center;background:#fff;border:2px solid transparent;transition:all 0.2s}
+.res-card.win{border-color:#1D9E75;background:#E1F5EE}
+.res-name{font-size:11px;color:#888;margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:0.4px}
+.res-val{font-size:22px;font-weight:700;color:#1a1a2e}
+.res-unit{font-size:11px;color:#888;margin-top:2px}
+.win-badge{display:inline-block;background:#1D9E75;color:#fff;font-size:10px;padding:3px 10px;border-radius:99px;margin-top:6px;font-weight:600}
+.diff-badge{font-size:11px;color:#993C1D;margin-top:6px;font-weight:500}
+.res-winner-txt{font-size:15px;font-weight:700;color:#085041;margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.big-num{font-size:38px;font-weight:700;color:#1a1a2e;text-align:center;letter-spacing:-1px}
+.big-lbl{font-size:14px;color:#555;text-align:center;margin-top:4px;font-weight:500}
+.big-detail{font-size:12px;color:#888;text-align:center;margin-top:8px;line-height:1.5}
+/* PROMO TABS */
+.promo-tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.pt{padding:8px 14px;border-radius:99px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid #e5e0f5;background:#faf9ff;color:#888;letter-spacing:0.3px;transition:all 0.15s}
+.pt.on{background:#FBEAF0;color:#72243E;border-color:#ED93B1}
+.promo-section{display:none}
+.promo-section.show{display:block}
+/* FOOTER */
+.footer-note{text-align:center;font-size:11px;color:#ccc;padding:16px;margin-top:8px}
+</style>
+</head>
+<body>
+<div class="app">
+
+<div id="login-wrap" class="login-wrap">
+  <div class="login-blob">🛒</div>
+  <div class="login-title">คุ้มเวอร์</div>
+  <div class="login-sub">แอปคำนวณช้อปปิ้งสดใส<br>ใช้ได้ทุกที่ ทุกเครื่อง ฟรี!</div>
+  <div class="login-card">
+    <div class="login-lbl">เข้าด้วยชื่อเล่น</div>
+    <input class="login-input" id="nick" placeholder="เช่น มิ้ว, น้ำตาล..." maxlength="20"/>
+    <button class="login-btn" onclick="doLogin()">เข้าใช้งาน →</button>
+  </div>
+</div>
+
+<div id="app-wrap" style="display:none">
+  <div class="topbar">
+    <div class="av" id="av-txt">?</div>
+    <div>
+      <div class="topbar-name" id="name-txt">ผู้ใช้</div>
+      <div class="topbar-sub">คุ้มเวอร์ · คำนวณฉลาดช้อป</div>
+    </div>
+    <button class="logout-btn" onclick="doLogout()"><i class="ti ti-logout"></i></button>
+  </div>
+  <div class="nav">
+    <button class="nav-btn a0" id="nb0" onclick="goPan(0,this)"><i class="ti ti-scale"></i>เปรียบราคา</button>
+    <button class="nav-btn" id="nb1" onclick="goPan(1,this)"><i class="ti ti-users"></i>หารบิล</button>
+    <button class="nav-btn" id="nb2" onclick="goPan(2,this)"><i class="ti ti-tag"></i>โปรโมชั่น</button>
+  </div>
+
+  <!-- PANE 0: COMPARE -->
+  <div class="pane show" id="pan0">
+    <div class="hero hero0">
+      <div class="hero-title"><i class="ti ti-scale"></i> เปรียบราคาสินค้า</div>
+      <div class="hero-sub">ใส่ราคา + ปริมาณ แล้วรู้ทันทีว่าซื้ออันไหนคุ้มกว่า</div>
+    </div>
+    <div class="field-group" id="items-wrap">
+      <div id="item0">
+        <div class="item-hdr"><div class="item-num n0">1</div><div class="item-lbl">สินค้าชิ้นที่ 1</div></div>
+        <div class="frow3">
+          <div><div class="flabel">ราคา (฿)</div><input class="fin price" type="number" placeholder="59" min="0" step="any"/></div>
+          <div><div class="flabel">ปริมาณ</div><input class="fin qty" type="number" placeholder="100" min="0" step="any"/></div>
+          <div><div class="flabel">หน่วย</div><select class="fsel unit"><option value="g">กรัม</option><option value="kg">กิโลก.</option><option value="ml">มล.</option><option value="l">ลิตร</option><option value="pc">ชิ้น</option><option value="pk">แพ็ค</option></select></div>
+        </div>
+      </div>
+      <div class="sep">— ชิ้นที่ 2 —</div>
+      <div id="item1">
+        <div class="item-hdr"><div class="item-num n1">2</div><div class="item-lbl">สินค้าชิ้นที่ 2</div></div>
+        <div class="frow3">
+          <div><div class="flabel">ราคา (฿)</div><input class="fin price" type="number" placeholder="105" min="0" step="any"/></div>
+          <div><div class="flabel">ปริมาณ</div><input class="fin qty" type="number" placeholder="200" min="0" step="any"/></div>
+          <div><div class="flabel">หน่วย</div><select class="fsel unit"><option value="g">กรัม</option><option value="kg">กิโลก.</option><option value="ml">มล.</option><option value="l">ลิตร</option><option value="pc">ชิ้น</option><option value="pk">แพ็ค</option></select></div>
+        </div>
+      </div>
+      <div id="extra-items"></div>
+      <button class="add-btn" onclick="addItem()"><i class="ti ti-plus"></i> เพิ่มตัวเลือก</button>
+    </div>
+    <button class="go-btn go0" onclick="calcComp()"><i class="ti ti-calculator"></i> คำนวณเลย!</button>
+    <div class="result res0" id="res-comp"></div>
+    <div class="footer-note">คุ้มเวอร์ · ใช้ฟรี ไม่มีโฆษณา</div>
+  </div>
+
+  <!-- PANE 1: SPLIT -->
+  <div class="pane" id="pan1">
+    <div class="hero hero1">
+      <div class="hero-title"><i class="ti ti-users"></i> หารบิลช้อปปิ้ง</div>
+      <div class="hero-sub">ซื้อด้วยกัน หารเท่าๆ กัน หักส่วนลดและค่าส่งได้เลย</div>
+    </div>
+    <div class="field-group">
+      <div class="frow">
+        <div><div class="flabel">ราคารวม (฿)</div><input class="fin" id="st" type="number" placeholder="450" min="0" step="any"/></div>
+        <div><div class="flabel">จำนวนคน</div><input class="fin" id="sp" type="number" placeholder="3" min="1" step="1"/></div>
+      </div>
+      <div class="frow">
+        <div><div class="flabel">ส่วนลด / คูปอง (฿)</div><input class="fin" id="sd" type="number" placeholder="0" min="0" step="any"/></div>
+        <div><div class="flabel">ค่าส่ง (฿)</div><input class="fin" id="sv" type="number" placeholder="0" min="0" step="any"/></div>
+      </div>
+    </div>
+    <button class="go-btn go1" onclick="calcSplit()"><i class="ti ti-calculator"></i> คิดเงิน!</button>
+    <div class="result res1" id="res-split">
+      <div class="big-num" id="sn">—</div>
+      <div class="big-lbl">฿ ต่อคน</div>
+      <div class="big-detail" id="sd2"></div>
+    </div>
+    <div class="footer-note">คุ้มเวอร์ · ใช้ฟรี ไม่มีโฆษณา</div>
+  </div>
+
+  <!-- PANE 2: PROMO -->
+  <div class="pane" id="pan2">
+    <div class="hero hero2">
+      <div class="hero-title"><i class="ti ti-tag"></i> คำนวณโปรโมชั่น</div>
+      <div class="hero-sub">ลด%, ลดบาท, ซื้อแถม, หารโปร ครบทุกแบบ</div>
+    </div>
+    <div class="field-group">
+      <div class="promo-tabs">
+        <button class="pt on" id="pt0" onclick="setPt('pct',0)">ลด %</button>
+        <button class="pt" id="pt1" onclick="setPt('thb',1)">ลด ฿</button>
+        <button class="pt" id="pt2" onclick="setPt('bxf',2)">ซื้อแถม</button>
+        <button class="pt" id="pt3" onclick="setPt('spl',3)">หารโปร</button>
+      </div>
+      <div class="promo-section show" id="pct">
+        <div class="frow">
+          <div><div class="flabel">ราคาปกติ (฿)</div><input class="fin" id="pc-o" type="number" placeholder="299" min="0" step="any"/></div>
+          <div><div class="flabel">ลด (%)</div><input class="fin" id="pc-p" type="number" placeholder="20" min="0" max="100" step="any"/></div>
+        </div>
+      </div>
+      <div class="promo-section" id="thb">
+        <div class="frow">
+          <div><div class="flabel">ราคาปกติ (฿)</div><input class="fin" id="tb-o" type="number" placeholder="299" min="0" step="any"/></div>
+          <div><div class="flabel">ลด (฿)</div><input class="fin" id="tb-d" type="number" placeholder="50" min="0" step="any"/></div>
+        </div>
+      </div>
+      <div class="promo-section" id="bxf">
+        <div class="frow">
+          <div><div class="flabel">ราคา/ชิ้น (฿)</div><input class="fin" id="bx-p" type="number" placeholder="49" min="0" step="any"/></div>
+          <div><div class="flabel">ต้องการ (ชิ้น)</div><input class="fin" id="bx-n" type="number" placeholder="3" min="1" step="1"/></div>
+        </div>
+        <div class="frow">
+          <div><div class="flabel">ซื้อ (ชิ้น)</div><input class="fin" id="bx-b" type="number" placeholder="2" min="1" step="1"/></div>
+          <div><div class="flabel">แถม (ชิ้น)</div><input class="fin" id="bx-f" type="number" placeholder="1" min="0" step="1"/></div>
+        </div>
+      </div>
+      <div class="promo-section" id="spl">
+        <div class="frow">
+          <div><div class="flabel">ราคาโปร (฿)</div><input class="fin" id="sl-p" type="number" placeholder="199" min="0" step="any"/></div>
+          <div><div class="flabel">หาร (คน)</div><input class="fin" id="sl-n" type="number" placeholder="2" min="1" step="1"/></div>
+        </div>
+        <div><div class="flabel">ราคาปกติ/คน (฿) — เพื่อดูว่าประหยัดแค่ไหน</div><input class="fin" id="sl-o" type="number" placeholder="150" min="0" step="any"/></div>
+      </div>
+    </div>
+    <button class="go-btn go2" onclick="calcPromo()"><i class="ti ti-calculator"></i> คำนวณโปร!</button>
+    <div class="result res2" id="res-promo">
+      <div class="big-num" id="pn">—</div>
+      <div class="big-lbl" id="pl"></div>
+      <div class="big-detail" id="pd"></div>
+    </div>
+    <div class="footer-note">คุ้มเวอร์ · ใช้ฟรี ไม่มีโฆษณา</div>
+  </div>
+</div>
+
+<script>
+var curPromo='pct', itemCnt=2, numColors=['n0','n1','n2','n3'];
+function sv(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+function gv(k){try{return localStorage.getItem(k)}catch(e){return null}}
+function doLogin(){
+  var n=document.getElementById('nick').value.trim();
+  if(!n){document.getElementById('nick').style.borderColor='#E24B4A';return;}
+  sv('kumver_nick',n);showApp(n);
+}
+function doLogout(){sv('kumver_nick','');document.getElementById('app-wrap').style.display='none';document.getElementById('login-wrap').style.display='flex';document.getElementById('nick').value='';}
+function showApp(n){document.getElementById('login-wrap').style.display='none';document.getElementById('app-wrap').style.display='block';document.getElementById('name-txt').textContent=n;document.getElementById('av-txt').textContent=n.charAt(0).toUpperCase();}
+window.addEventListener('load',function(){var s=gv('kumver_nick');if(s)showApp(s);});
+function goPan(i,el){
+  [0,1,2].forEach(function(j){
+    document.getElementById('pan'+j).classList.remove('show');
+    var nb=document.getElementById('nb'+j);
+    nb.className='nav-btn';
+  });
+  document.getElementById('pan'+i).classList.add('show');
+  el.classList.add('a'+i);
+}
+function addItem(){
+  var nc=numColors[itemCnt]||'n3';
+  var d=document.createElement('div');
+  d.innerHTML='<div class="sep">— ชิ้นที่ '+(itemCnt+1)+' —</div><div id="item'+itemCnt+'"><div class="item-hdr"><div class="item-num '+nc+'">'+(itemCnt+1)+'</div><div class="item-lbl">สินค้าชิ้นที่ '+(itemCnt+1)+'</div><button class="rm-btn" onclick="this.closest(\'div[id]\').previousSibling.remove();this.closest(\'div[id]\').remove()">✕</button></div><div class="frow3"><div><div class="flabel">ราคา (฿)</div><input class="fin price" type="number" placeholder="0" min="0" step="any"/></div><div><div class="flabel">ปริมาณ</div><input class="fin qty" type="number" placeholder="0" min="0" step="any"/></div><div><div class="flabel">หน่วย</div><select class="fsel unit"><option value="g">กรัม</option><option value="kg">กิโลก.</option><option value="ml">มล.</option><option value="l">ลิตร</option><option value="pc">ชิ้น</option><option value="pk">แพ็ค</option></select></div></div></div>';
+  document.getElementById('extra-items').appendChild(d);
+  itemCnt++;
+}
+function toBase(q,u){return u==='kg'?q*1000:u==='l'?q*1000:q;}
+function unitLbl(u){return{g:'g',kg:'g',ml:'มล.',l:'มล.',pc:'ชิ้น',pk:'แพ็ค'}[u]||u;}
+function calcComp(){
+  var ps=document.querySelectorAll('#pan0 .price');
+  var qs=document.querySelectorAll('#pan0 .qty');
+  var us=document.querySelectorAll('#pan0 .unit');
+  var items=[];
+  for(var i=0;i<ps.length;i++){
+    var p=parseFloat(ps[i].value),q=parseFloat(qs[i].value),u=us[i].value;
+    if(!p||!q)continue;
+    var base=toBase(q,u);
+    items.push({i:i+1,p:p,q:q,u:u,base:base,pu:p/base,ul:unitLbl(u)});
+  }
+  var box=document.getElementById('res-comp');
+  if(items.length<2){box.innerHTML='<div style="text-align:center;color:#888;font-size:14px;padding:8px">กรอกอย่างน้อย 2 ชิ้นนะคะ</div>';box.className='result res0 show';return;}
+  var best=items.reduce(function(a,b){return a.pu<b.pu?a:b;});
+  var html='<div class="res-winner-txt">🏆 ชิ้นที่ '+best.i+' คุ้มที่สุด!</div><div class="res-grid">';
+  items.forEach(function(it){
+    var win=it===best;
+    var diff=win?'':'<div class="diff-badge">แพงกว่า '+((it.pu-best.pu)/best.pu*100).toFixed(1)+'%</div>';
+    var badge=win?'<div><span class="win-badge">คุ้มสุด ✓</span></div>':'';
+    html+='<div class="res-card'+(win?' win':'')+'"><div class="res-name">ชิ้นที่ '+it.i+'</div><div class="res-val">'+it.pu.toFixed(2)+'</div><div class="res-unit">฿/'+it.ul+'</div>'+badge+diff+'</div>';
+  });
+  html+='</div>';
+  box.innerHTML=html;box.className='result res0 show';
+}
+function calcSplit(){
+  var t=parseFloat(document.getElementById('st').value)||0;
+  var p=parseInt(document.getElementById('sp').value)||1;
+  var d=parseFloat(document.getElementById('sd').value)||0;
+  var v=parseFloat(document.getElementById('sv').value)||0;
+  var net=t-d+v;
+  document.getElementById('sn').textContent=(net/p).toFixed(2);
+  document.getElementById('sd2').textContent='รวม '+net.toFixed(2)+' ฿ ÷ '+p+' คน'+(d>0?' (ลด '+d+' ฿)':'')+(v>0?' + ส่ง '+v+' ฿':'');
+  document.getElementById('res-split').className='result res1 show';
+}
+function setPt(k,i){
+  curPromo=k;
+  ['pct','thb','bxf','spl'].forEach(function(t){document.getElementById(t).classList.remove('show');});
+  [0,1,2,3].forEach(function(j){document.getElementById('pt'+j).classList.remove('on');});
+  document.getElementById(k).classList.add('show');
+  document.getElementById('pt'+i).classList.add('on');
+  document.getElementById('res-promo').className='result res2';
+}
+function calcPromo(){
+  var big='',lbl='',det='';
+  if(curPromo==='pct'){
+    var o=parseFloat(document.getElementById('pc-o').value)||0;
+    var p=parseFloat(document.getElementById('pc-p').value)||0;
+    var f=o*(1-p/100);
+    big=f.toFixed(2)+' ฿';lbl='ราคาหลังลด '+p+'%';det='ประหยัด '+(o-f).toFixed(2)+' ฿';
+  }else if(curPromo==='thb'){
+    var o=parseFloat(document.getElementById('tb-o').value)||0;
+    var d=parseFloat(document.getElementById('tb-d').value)||0;
+    var f=o-d;
+    big=f.toFixed(2)+' ฿';lbl='ราคาหลังหักส่วนลด';det='จาก '+o+' ฿ ประหยัด '+d+' ฿ ('+(d/o*100).toFixed(1)+'%)';
+  }else if(curPromo==='bxf'){
+    var pr=parseFloat(document.getElementById('bx-p').value)||0;
+    var b=parseInt(document.getElementById('bx-b').value)||1;
+    var fr=parseInt(document.getElementById('bx-f').value)||0;
+    var n=parseInt(document.getElementById('bx-n').value)||1;
+    var sets=Math.ceil(n/(b+fr));
+    var pay=sets*b;var get=sets*(b+fr);
+    var cost=pay*pr;var ppc=cost/get;
+    big=ppc.toFixed(2)+' ฿/ชิ้น';lbl='ซื้อ '+b+' แถม '+fr;det='จ่าย '+cost.toFixed(0)+' ฿ ได้ '+get+' ชิ้น';
+  }else{
+    var pr=parseFloat(document.getElementById('sl-p').value)||0;
+    var n=parseInt(document.getElementById('sl-n').value)||1;
+    var o=parseFloat(document.getElementById('sl-o').value)||0;
+    var pp=pr/n;var save=o-pp;
+    big=pp.toFixed(2)+' ฿';lbl='คนละ (หาร '+n+' คน)';
+    det=save>0?'ประหยัดกว่าซื้อเดี่ยว '+save.toFixed(2)+' ฿/คน':'โปรรวม '+pr+' ฿';
+  }
+  document.getElementById('pn').textContent=big;
+  document.getElementById('pl').textContent=lbl;
+  document.getElementById('pd').textContent=det;
+  document.getElementById('res-promo').className='result res2 show';
+}
+</script>
+</body>
+</html>
